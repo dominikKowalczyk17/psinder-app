@@ -4,6 +4,7 @@ import com.dkowalczyk.psinder_app.dto.*;
 import com.dkowalczyk.psinder_app.model.User;
 import com.dkowalczyk.psinder_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final DogService dogService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
@@ -67,6 +69,42 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
+
+    @Transactional
+    public UserDto registerUser(CreateUserRequest request) {
+        if (userRepository.existsByName(request.getName())) {
+            throw new RuntimeException("User already exists with name: " + request.getName());
+        }
+
+        // BUSINESS RULE: Every user must have a dog for dog walking app
+        if (request.getDog() == null) {
+            throw new RuntimeException("Dog information is required for registration");
+        }
+
+        if (!isValidDogRequest(request.getDog())) {
+            throw new RuntimeException("Dog must have at least a name and size to register");
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setAge(request.getAge());
+        user.setBio(request.getBio());
+        user.setRole("USER");
+
+        // Dog is guaranteed to be valid at this point
+        user.setDog(dogService.convertToEntity(request.getDog()));
+
+        User savedUser = userRepository.save(user);
+        return convertToDto(savedUser);
+    }
+
+    private boolean isValidDogRequest(CreateDogRequest dogRequest) {
+        // For dog walking app, we need at least name and size
+        return dogRequest.getName() != null && !dogRequest.getName().trim().isEmpty() &&
+           dogRequest.getSize() != null && !dogRequest.getSize().trim().isEmpty();
+    }
+
 
     private UserDto convertToDto(User user) {
         UserDto dto = new UserDto();

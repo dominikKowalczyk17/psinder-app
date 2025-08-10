@@ -64,7 +64,15 @@ public class DogService {
         Dog dog = new Dog();
         dog.setName(request.getName());
         dog.setAge(request.getAge());
-        dog.setSize(Dog.DogSize.valueOf(request.getSize().toUpperCase()));
+        
+        // Validate and set size
+        try {
+            dog.setSize(Dog.DogSize.valueOf(request.getSize().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid dog size: " + request.getSize() + 
+                                     ". Valid values are: SMALL, MEDIUM, LARGE");
+        }
+        
         dog.setEnergy(request.getEnergy());
         dog.setBio(request.getBio());
         dog.setPhotos(request.getPhotos());

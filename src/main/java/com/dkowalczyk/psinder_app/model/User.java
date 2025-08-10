@@ -28,4 +28,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dog_id", referencedColumnName = "id")
     private Dog dog;
+
+    @Column(name = "password" , nullable = false)
+    private String password;
+
+    @Column(name = "role")
+    private String role;
 }
