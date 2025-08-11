@@ -24,12 +24,15 @@ public class Dog {
     @Column(name = "age")
     private int age;
 
+    @Column(name = "breed")
+    private String breed;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "size")
     private DogSize size;
 
     @Column(name = "energy_level")
-    private int energy;
+    private EnergyLevel energy;
 
     @Column(name = "bio", length = 500)
     private String bio;
@@ -41,5 +44,9 @@ public class Dog {
 
     public enum DogSize {
         SMALL, MEDIUM, LARGE
+    }
+
+    public enum EnergyLevel {
+        LOW, MEDIUM, HIGH, VERY_HIGH
     }
 }

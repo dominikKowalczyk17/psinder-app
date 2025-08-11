@@ -40,8 +40,8 @@ public class DogController {
     @GetMapping("/by-energy")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<DogDto>> getDogsByEnergyRange(
-            @RequestParam int minEnergy,
-            @RequestParam int maxEnergy) {
+            @RequestParam String minEnergy,
+            @RequestParam String maxEnergy) {
         List<DogDto> dogs = dogService.getDogsByEnergyRange(minEnergy, maxEnergy);
         return ResponseEntity.ok(dogs);
     }

@@ -41,8 +41,10 @@ public class DogService {
     }
 
     @Transactional(readOnly = true)
-    public List<DogDto> getDogsByEnergyRange(int minEnergy, int maxEnergy) {
-        return dogRepository.findByEnergyBetween(minEnergy, maxEnergy)
+    public List<DogDto> getDogsByEnergyRange(String minEnergy, String maxEnergy) {
+        Dog.EnergyLevel dogMinEnergy = Dog.EnergyLevel.valueOf(minEnergy.trim().toUpperCase());
+        Dog.EnergyLevel dogMaxEnergy = Dog.EnergyLevel.valueOf(maxEnergy.trim().toUpperCase());
+        return dogRepository.findByEnergyBetween(dogMinEnergy, dogMaxEnergy)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -54,9 +56,10 @@ public class DogService {
         dto.setName(dog.getName());
         dto.setAge(dog.getAge());
         dto.setSize(dog.getSize() != null ? dog.getSize().name() : null);
-        dto.setEnergy(dog.getEnergy());
+        dto.setEnergy(dog.getEnergy() != null ? dog.getEnergy().name() : null);
         dto.setBio(dog.getBio());
         dto.setPhotos(dog.getPhotos());
+        dto.setBreed(dog.getBreed());
         return dto;
     }
 
@@ -73,7 +76,7 @@ public class DogService {
                                      ". Valid values are: SMALL, MEDIUM, LARGE");
         }
         
-        dog.setEnergy(request.getEnergy());
+        dog.setEnergy(Dog.EnergyLevel.valueOf(request.getEnergy().toUpperCase()));
         dog.setBio(request.getBio());
         dog.setPhotos(request.getPhotos());
         return dog;

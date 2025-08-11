@@ -13,8 +13,9 @@ public class DogDto {
     private Long id;
     private String name;
     private int age;
+    private String breed;
     private String size;
-    private int energy;
+    private String energy;
     private String bio;
     private List<String> photos;
 }

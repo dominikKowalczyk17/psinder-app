@@ -22,9 +22,8 @@ public class CreateDogRequest {
     @NotBlank(message = "Dog size is required (SMALL, MEDIUM, LARGE)")
     private String size;
     
-    @Min(value = 0, message = "Energy level must be between 0-10")
-    @Max(value = 10, message = "Energy level must be between 0-10")
-    private int energy;
+    @NotBlank(message = "Dog energy is required (SMALL, MEDIUM, HIGH, VERY_HIGH)")
+    private String energy;
     
     private String bio;
     private List<String> photos;

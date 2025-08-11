@@ -12,5 +12,5 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
 
     List<Dog> findBySize(Dog.DogSize size);
 
-    List<Dog> findByEnergyBetween(int minEnergy, int maxEnergy);
+    List<Dog> findByEnergyBetween(Dog.EnergyLevel minEnergy, Dog.EnergyLevel maxEnergy);
 }
