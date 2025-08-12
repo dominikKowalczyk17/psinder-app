@@ -79,6 +79,7 @@ public class DogService {
         dog.setEnergy(Dog.EnergyLevel.valueOf(request.getEnergy().toUpperCase()));
         dog.setBio(request.getBio());
         dog.setPhotos(request.getPhotos());
+        dog.setBreed(request.getBreed());
         return dog;
     }
 }

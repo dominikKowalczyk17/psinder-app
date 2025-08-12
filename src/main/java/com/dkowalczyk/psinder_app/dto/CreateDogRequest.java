@@ -24,7 +24,7 @@ public class CreateDogRequest {
     
     @NotBlank(message = "Dog energy is required (SMALL, MEDIUM, HIGH, VERY_HIGH)")
     private String energy;
-    
+    private String breed;
     private String bio;
     private List<String> photos;
 }
