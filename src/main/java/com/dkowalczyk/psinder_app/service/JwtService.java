@@ -18,6 +18,7 @@ public class JwtService {
     
     private static final String SECRET_KEY = "7bad9e0abd9fe166833136e6799aa761d37c4767fb29b259b910005ac7b2fa1e";
     private static final int JWT_EXPIRATION = 86400000; // 24 hours
+    private static final int REFRESH_JWT_EXPIRATION = 604800000; // 7 days
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -41,6 +42,20 @@ public class JwtService {
                 .expiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(getSignInKey())
                 .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
+                    .subject(userDetails.getUsername())
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date(System.currentTimeMillis() + REFRESH_JWT_EXPIRATION))
+                    .signWith(getSignInKey())
+                    .compact();
+    }
+    
+    public boolean isRefreshTokenValid(String refreshToken, UserDetails userDetails) {
+        final String username = extractUsername(refreshToken);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(refreshToken);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

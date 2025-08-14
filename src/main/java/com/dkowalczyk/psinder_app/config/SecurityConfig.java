@@ -1,6 +1,5 @@
 package com.dkowalczyk.psinder_app.config;
 
-import com.dkowalczyk.psinder_app.service.CustomUserDetailsService;
 import com.dkowalczyk.psinder_app.utils.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
