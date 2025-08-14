@@ -3,6 +3,7 @@ package com.dkowalczyk.psinder_app.controller;
 import com.dkowalczyk.psinder_app.dto.AuthResponse;
 import com.dkowalczyk.psinder_app.dto.CreateUserRequest;
 import com.dkowalczyk.psinder_app.dto.LoginRequest;
+import com.dkowalczyk.psinder_app.dto.RefreshTokenRequest;
 import com.dkowalczyk.psinder_app.dto.UserDto;
 import com.dkowalczyk.psinder_app.service.AuthService;
 import com.dkowalczyk.psinder_app.service.UserService;
@@ -33,4 +34,10 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+    }
+    
 }
