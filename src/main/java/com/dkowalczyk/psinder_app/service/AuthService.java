@@ -2,6 +2,7 @@ package com.dkowalczyk.psinder_app.service;
 
 import com.dkowalczyk.psinder_app.dto.AuthResponse;
 import com.dkowalczyk.psinder_app.dto.LoginRequest;
+import com.dkowalczyk.psinder_app.exceptions.InvalidRefreshTokenException;
 import com.dkowalczyk.psinder_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +40,7 @@ public class AuthService {
         
         return AuthResponse.builder()
                 .accessToken(jwtToken)
+                .refreshToken(jwtToken)
                 .build();
     }
 
@@ -48,7 +50,7 @@ public class AuthService {
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
                 if (!jwtService.isRefreshTokenValid(refreshToken, userDetails)) {
-                        throw new RuntimeException("Invalid refresh token");
+                        throw new InvalidRefreshTokenException("Invalid refresh token for user: " + username);
                 }
 
                 String newAccessToken = jwtService.generateToken(userDetails);
@@ -61,7 +63,7 @@ public class AuthService {
                         .refreshExpiresIn(604800)
                         .build();
         } catch (Exception e) {
-                throw new RuntimeException("Token refresh failed");
+                throw new RuntimeException("Token refresh failed", e);
         }
     }
 }
