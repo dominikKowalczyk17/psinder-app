@@ -1,14 +1,17 @@
 package com.dkowalczyk.psinder_app.exceptions;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorResponse {
     private String message;
     private int status;
     private String code;
-    @Builder.Default
-    private long timestamp = System.currentTimeMillis();
+    private long timestamp;
 }

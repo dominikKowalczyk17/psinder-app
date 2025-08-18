@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
                 .message(ex.getMessage())
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .code("INVALID_REFRESH_TOKEN")
+                .timestamp(System.currentTimeMillis())
                 .build();
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
@@ -26,6 +27,7 @@ public class GlobalExceptionHandler {
                 .message("An unexpected error occurred")
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .code("INTERNAL_ERROR")
+                .timestamp(System.currentTimeMillis())
                 .build();
         
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
