@@ -20,28 +20,26 @@ public class AuthService {
     private final CustomUserDetailsService customUserDetailsService;
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getName(),
-                        request.getPassword()
-                )
-        );
-        
-        var user = userRepository.findByName(request.getName())
-                .orElseThrow();
-        
-        var jwtToken = jwtService.generateToken(
-                org.springframework.security.core.userdetails.User.builder()
-                        .username(user.getName())
-                        .password(user.getPassword())
-                        .roles(user.getRole())
-                        .build()
-        );
-        
-        return AuthResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(jwtToken)
-                .build();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getName(),
+                            request.getPassword()
+                    )
+            );
+            
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getName());
+            
+            var jwtToken = jwtService.generateToken(userDetails);
+            var refreshToken = jwtService.generateRefreshToken(userDetails);
+            
+            return AuthResponse.builder()
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
+        }
     }
 
     public AuthResponse refreshToken(String refreshToken) {
